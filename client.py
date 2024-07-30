@@ -62,6 +62,7 @@ def download_file():
                     f.write(data)
             messagebox.showinfo("Info", "Arquivo recebido com sucesso")
             client_socket.close()
+            download_window.destroy()
 
         download_button = tk.Button(download_window, text="Download", command=confirm_download)
         download_button.pack(pady=5)
