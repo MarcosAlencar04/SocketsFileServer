@@ -48,7 +48,6 @@ def receive_file(client_socket, client_address):
     print(f"Arquivo {filename} recebido e salvo em {save_path}")
     log_action("UPLOAD", client_address, filename)
 
-'''
 def send_file(client_socket, client_address):
     files = os.listdir('ArquivosServidor')
     files_list = "\n".join(files)
@@ -56,22 +55,6 @@ def send_file(client_socket, client_address):
 
     filename = client_socket.recv(1024).decode('utf-8').strip()
     file_path = os.path.join('ArquivosServidor', filename)
-    if filename in files:
-        with open(file_path, 'rb') as f:
-            while (data := f.read(1024)):
-                client_socket.sendall(data)
-        print(f"Arquivo {filename} enviado")
-        log_action("DOWNLOAD", client_address, filename)
-    else:
-        client_socket.sendall(b'File not found')
-'''
-def send_file(client_socket, client_address):
-    files = os.listdir("ArquivosServidor")
-    files_list = "\n".join(files)
-    client_socket.sendall(files_list.encode())
-
-    filename = client_socket.recv(1024).decode()
-    file_path = os.path.join("ArquivosServidor", filename)
     if filename in files:
         with open(file_path, 'rb') as f:
             while (data := f.read(1024)):

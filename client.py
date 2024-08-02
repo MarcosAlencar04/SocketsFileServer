@@ -1,7 +1,7 @@
 import socket
 import os
 import tkinter as tk
-from tkinter import filedialog, messagebox, simpledialog
+from tkinter import filedialog, messagebox, simpledialog, ttk
 
 def connect_to_server(server_ip):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,19 +27,32 @@ def download_file(server_ip):
 
     files = client_socket.recv(4096).decode().split('\n')
     if files:
-        selected_file = simpledialog.askstring("Escolher arquivo", f"Arquivos disponíveis:\n{'\n'.join(files)}\n\nDigite o nome do arquivo:")
-        if selected_file:
-            client_socket.sendall(selected_file.encode())
-            save_path = os.path.join("ArquivosCliente", selected_file)
-            os.makedirs(os.path.dirname(save_path), exist_ok=True)
-            with open(save_path, 'wb') as f:
-                while True:
-                    data = client_socket.recv(1024)
-                    if not data:
-                        break
-                    f.write(data)
-            messagebox.showinfo("Info", "Arquivo recebido com sucesso")
-    client_socket.close()
+        download_window = tk.Toplevel(app)
+        download_window.title("Selecione um arquivo para download")
+
+        tk.Label(download_window, text="Selecione um arquivo:").pack(pady=5)
+
+        selected_file = tk.StringVar()
+        file_combobox = ttk.Combobox(download_window, textvariable=selected_file, values=files)
+        file_combobox.pack(pady=5)
+
+        def confirm_download(selected_file, client_socket):
+            if selected_file:
+                file_name = selected_file.get()
+                client_socket.sendall(file_name.encode())
+                save_path = os.path.join("ArquivosCliente", file_name)
+                os.makedirs(os.path.dirname(save_path), exist_ok=True)
+                with open(save_path, 'wb') as f:
+                    while True:
+                        data = client_socket.recv(1024)
+                        if not data:
+                            break
+                        f.write(data)
+                messagebox.showinfo("Info", "Arquivo recebido com sucesso")
+                download_window.destroy()
+        
+        download_button = tk.Button(download_window, text="Download", command=lambda: confirm_download(selected_file, client_socket))
+        download_button.pack(pady=5)
 
 app = tk.Tk()
 app.title("Cliente")
