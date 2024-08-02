@@ -3,13 +3,13 @@ import os
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog
 
-def connect_to_server():
+def connect_to_server(server_ip):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost', 12345))
+    client_socket.connect((server_ip, 12345))
     return client_socket
 
-def upload_file():
-    client_socket = connect_to_server()
+def upload_file(server_ip):
+    client_socket = connect_to_server(server_ip)
     client_socket.sendall(b'upload')
 
     filename = filedialog.askopenfilename()
@@ -21,8 +21,8 @@ def upload_file():
         messagebox.showinfo("Info", "Arquivo enviado com sucesso")
     client_socket.close()
 
-def download_file():
-    client_socket = connect_to_server()
+def download_file(server_ip):
+    client_socket = connect_to_server(server_ip)
     client_socket.sendall(b'download')
 
     files = client_socket.recv(4096).decode().split('\n')
@@ -44,10 +44,12 @@ def download_file():
 app = tk.Tk()
 app.title("Cliente")
 
-upload_button = tk.Button(app, text="Upload de Arquivo", command=upload_file)
+server_ip = simpledialog.askstring("IP do Servidor", "Digite o IP do servidor:")
+
+upload_button = tk.Button(app, text="Upload de Arquivo", command=lambda: upload_file(server_ip))
 upload_button.pack(pady=10)
 
-download_button = tk.Button(app, text="Download de Arquivo", command=download_file)
+download_button = tk.Button(app, text="Download de Arquivo", command=lambda: download_file(server_ip))
 download_button.pack(pady=10)
 
 app.mainloop()
