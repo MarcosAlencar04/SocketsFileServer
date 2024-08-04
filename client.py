@@ -69,8 +69,8 @@ def show_main_window(server_ip):
     app.title("Cliente")
 
     # Ajustar tamanho da janela principal e centralizar botões
-    window_width = 300
-    window_height = 150
+    window_width = 200
+    window_height = 100
     screen_width = app.winfo_screenwidth()
     screen_height = app.winfo_screenheight()
     position_top = int(screen_height / 2 - window_height / 2)
