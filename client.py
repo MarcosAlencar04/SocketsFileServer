@@ -30,6 +30,15 @@ def download_file(server_ip):
         download_window = tk.Toplevel(app)
         download_window.title("Selecione um arquivo para download")
 
+        # Centralizar a janela de download
+        window_width = 300
+        window_height = 150
+        screen_width = app.winfo_screenwidth()
+        screen_height = app.winfo_screenheight()
+        position_top = int(screen_height / 2 - window_height / 2)
+        position_right = int(screen_width / 2 - window_width / 2)
+        download_window.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
+
         tk.Label(download_window, text="Selecione um arquivo:").pack(pady=5)
 
         selected_file = tk.StringVar()
@@ -54,15 +63,39 @@ def download_file(server_ip):
         download_button = tk.Button(download_window, text="Download", command=lambda: confirm_download(selected_file, client_socket))
         download_button.pack(pady=5)
 
-app = tk.Tk()
-app.title("Cliente")
+def show_main_window(server_ip):
+    global app
+    app = tk.Tk()
+    app.title("Cliente")
 
-server_ip = simpledialog.askstring("IP do Servidor", "Digite o IP do servidor:")
+    # Ajustar tamanho da janela principal e centralizar botões
+    window_width = 300
+    window_height = 150
+    screen_width = app.winfo_screenwidth()
+    screen_height = app.winfo_screenheight()
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
+    app.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
 
-upload_button = tk.Button(app, text="Upload de Arquivo", command=lambda: upload_file(server_ip))
-upload_button.pack(pady=10)
+    frame = tk.Frame(app)
+    frame.pack(expand=True)
 
-download_button = tk.Button(app, text="Download de Arquivo", command=lambda: download_file(server_ip))
-download_button.pack(pady=10)
+    upload_button = tk.Button(frame, text="Upload de Arquivo", command=lambda: upload_file(server_ip))
+    upload_button.pack(pady=10)
 
-app.mainloop()
+    download_button = tk.Button(frame, text="Download de Arquivo", command=lambda: download_file(server_ip))
+    download_button.pack(pady=10)
+
+    app.mainloop()
+
+def main():
+    root = tk.Tk()
+    root.withdraw()  # Oculta a janela principal temporária
+
+    server_ip = simpledialog.askstring("IP do Servidor", "Digite o IP do servidor:")
+    if server_ip:
+        root.destroy()  # Fecha a janela temporária
+        show_main_window(server_ip)
+
+if __name__ == "__main__":
+    main()
