@@ -30,7 +30,6 @@ def download_file(server_ip):
         download_window = tk.Toplevel(app)
         download_window.title("Selecione um arquivo para download")
 
-        # Centralizar a janela de download
         window_width = 300
         window_height = 150
         screen_width = app.winfo_screenwidth()
@@ -68,7 +67,6 @@ def show_main_window(server_ip):
     app = tk.Tk()
     app.title("Cliente")
 
-    # Ajustar tamanho da janela principal e centralizar botões
     window_width = 200
     window_height = 100
     screen_width = app.winfo_screenwidth()
@@ -90,11 +88,11 @@ def show_main_window(server_ip):
 
 def main():
     root = tk.Tk()
-    root.withdraw()  # Oculta a janela principal temporária
+    root.withdraw()
 
     server_ip = simpledialog.askstring("IP do Servidor", "Digite o IP do servidor:")
     if server_ip:
-        root.destroy()  # Fecha a janela temporária
+        root.destroy()
         show_main_window(server_ip)
 
 if __name__ == "__main__":
